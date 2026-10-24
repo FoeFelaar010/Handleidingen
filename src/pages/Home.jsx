@@ -20,7 +20,7 @@ export default function Home() {
                 <a className="card" href={`#/${it.slug}`}>
                   <Icoon naam={it.icoon} />
                   <span className="ct">
-                    <b>{it.titel}{it.beta && <> <span className="beta">Beta</span></>}</b>
+                    <b>{it.titel}{it.slot && <> <span className="beta slot-label">🔒 Code</span></>}{it.beta && !it.slot && <> <span className="beta">Beta</span></>}</b>
                     <span>{it.tekst}</span>
                   </span>
                 </a>
