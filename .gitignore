@@ -1,0 +1,9 @@
+node_modules
+dist
+# worden in GitHub Actions gemaakt uit word/
+public/data
+public/i
+# Word-tijdelijke bestanden en exports met echte namen
+~$*
+*.csv
+*.xlsx
