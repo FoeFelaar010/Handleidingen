@@ -207,7 +207,7 @@ def norm(t): return re.sub(r'[\s\xa0]+','',html.unescape(t)).lower()
 def nieuwste(bron):
     """Nieuwste versie van een Word-bestand: Handleiding_Teams_v26_02.docx wint van _v26_01 en _v0_4."""
     best = None
-    for p in glob.glob(os.path.join(WORD, glob.escape(bron) + '_v*.docx')):
+    for p in glob.glob(os.path.join(ROOT, '**', glob.escape(bron) + '_v*.docx'), recursive=True):
         m = re.search(r'_v(\d+)_(\d+)\.docx$', p)
         if not m or os.path.basename(p).startswith('~$'): continue
         key = (int(m.group(1)), int(m.group(2)))
