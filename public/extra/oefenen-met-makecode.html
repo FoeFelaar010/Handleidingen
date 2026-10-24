@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oefenen met MakeCode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Source+Code+Pro:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3F7; --surface:#FFFFFF; --text:#1B2A38; --muted:#4F6170; --line:#C9D3DB;
+  --port:#0B6E99; --green:#2E8B57; --basis:#1E90FF; --basis-dark:#1873CC; --invoer:#C724B1; --invoer-dark:#9E1C8D;
+  --board:#1D1F21; --led-off:#3A3D40; --led-on:#FF3030; --gold:#D4A93C; --code-bg:#F4F7FA;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13202B; --surface:#1B2C3A; --text:#E6EEF4; --muted:#A9BAC7; --line:#33495A;
+    --port:#5CB8E0; --green:#5CC28A; --code-bg:#14232F; --led-off:#34373A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13202B; --surface:#1B2C3A; --text:#E6EEF4; --muted:#A9BAC7; --line:#33495A;
+  --port:#5CB8E0; --green:#5CC28A; --code-bg:#14232F; --led-off:#34373A;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Lexend",Arial,Helvetica,sans-serif;font-size:17px;line-height:1.55}
+main{max-width:980px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:clamp(28px,6vw,42px);line-height:1.12;margin:0 0 10px;color:var(--port);font-weight:700}
+.intro{max-width:62ch;margin:0 0 28px;color:var(--muted)}
+section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 20px 24px;margin:0 0 26px}
+h2{font-size:24px;margin:0 0 6px;line-height:1.25}
+.lead{margin:0 0 18px;color:var(--muted);max-width:60ch}
+.grid2{display:grid;gap:24px;align-items:start}
+@media (min-width:820px){.grid2{grid-template-columns:minmax(0,340px) minmax(0,1fr)}}
+
+/* ---------- micro:bit ---------- */
+.mb{position:relative;background:var(--board);border-radius:26px;padding:26px 22px 0;max-width:340px;margin:0 auto;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.mb-logo{width:58px;height:26px;border:4px solid #8FD3F0;border-radius:14px;margin:0 auto 18px;position:relative}
+.mb-logo::before,.mb-logo::after{content:"";position:absolute;top:6px;width:6px;height:6px;border-radius:50%;background:#8FD3F0}
+.mb-logo::before{left:12px}.mb-logo::after{right:12px}
+.mb-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.leds{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:62%}
+.led{aspect-ratio:1/2.2;border-radius:3px;background:var(--led-off);transition:background .06s}
+.led.on{background:var(--led-on);box-shadow:0 0 10px 2px rgba(255,48,48,.65)}
+.btn-ab{display:flex;flex-direction:column;align-items:center;gap:6px;color:#8FD3F0;font-weight:700;font-size:15px}
+.btn-ab button{width:46px;height:46px;border-radius:50%;border:6px solid #6B6F73;background:#2B2E31;cursor:pointer}
+.btn-ab button:active,.btn-ab button.pressed{background:#E8A23A}
+.btn-ab button:focus-visible{outline:3px solid #FFD54A;outline-offset:3px}
+.edge{margin:22px -22px 0;height:46px;background:var(--gold);border-radius:0 0 26px 26px;display:flex;justify-content:space-around;align-items:center;font-weight:700;font-size:13px;color:#4A3A10}
+.status{margin:14px auto 0;max-width:340px;min-height:3.2em;font-size:15px;color:var(--muted);text-align:center}
+
+/* ---------- blokken ---------- */
+.choices{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.choice{font:inherit;font-size:15px;border:2px solid var(--line);background:var(--surface);color:var(--text);padding:8px 14px;border-radius:999px;cursor:pointer}
+.choice[aria-checked="true"]{border-color:var(--port);background:var(--port);color:#fff}
+.choice:focus-visible,.tab:focus-visible,.act:focus-visible,.cell:focus-visible,input[type=range]:focus-visible{outline:3px solid #FFB300;outline-offset:2px}
+.event{display:inline-block;min-width:min(100%,330px);border-radius:8px;padding:0 0 14px;color:#fff;font-family:"Source Code Pro",monospace;font-weight:600;font-size:15px}
+.event.basis{background:var(--basis)} .event.invoer{background:var(--invoer)}
+.event .hd{padding:9px 12px 7px}
+.event .body{margin-left:16px;border-radius:6px 0 0 6px;padding:6px 0 6px;background:transparent}
+.blk{background:var(--basis);border:1px solid var(--basis-dark);border-radius:6px;padding:7px 12px;margin:0 8px 4px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.event.basis .blk{background:#3FA2FF;border-color:var(--basis-dark)}
+.pill{background:#fff;color:#1B2A38;border-radius:999px;padding:1px 10px;font-weight:600}
+.icon{display:inline-grid;grid-template-columns:repeat(5,6px);gap:1px;background:var(--basis-dark);padding:3px;border-radius:4px}
+.icon i{width:6px;height:6px;background:rgba(255,255,255,.25);border-radius:1px}
+.icon i.on{background:#fff}
+.slider{margin:18px 0 0;max-width:430px}
+.slider label{display:flex;justify-content:space-between;font-weight:600;margin-bottom:6px}
+.slider input{width:100%;accent-color:var(--port)}
+.hint{font-size:15px;color:var(--muted);margin:8px 0 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.act{font:inherit;font-weight:600;font-size:16px;border:0;border-radius:10px;padding:11px 18px;cursor:pointer;background:var(--port);color:#fff}
+.act.ghost{background:transparent;color:var(--port);border:2px solid var(--port)}
+
+/* ---------- tekenen ---------- */
+.draw .event{min-width:0}
+.cells{display:grid;grid-template-columns:repeat(5,44px);gap:6px;background:var(--basis-dark);padding:8px;border-radius:6px;margin-top:6px}
+.cell{width:44px;height:44px;border:0;border-radius:5px;background:rgba(255,255,255,.22);cursor:pointer;padding:0}
+.cell[aria-pressed="true"]{background:#fff}
+.tabs{display:flex;gap:6px;margin:0 0 -1px}
+.tab{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);border-bottom:0;background:var(--bg);color:var(--muted);padding:8px 14px;border-radius:10px 10px 0 0;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--code-bg);color:var(--text)}
+pre{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:14px;overflow-x:auto;font-family:"Source Code Pro",Consolas,monospace;font-size:15px;line-height:1.5;color:var(--text);min-height:220px}
+ol.how{margin:18px 0 0;padding-left:1.4em;max-width:62ch}
+ol.how li{margin:0 0 6px}
+.nr{display:inline-block;background:var(--port);color:#fff;font-weight:700;font-size:13px;padding:0 6px;border-radius:3px;margin:0 2px}
+kbd{font-family:inherit;font-weight:600;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:0 6px}
+.toast{min-height:1.5em;font-size:15px;color:var(--green);font-weight:600;margin-top:8px}
+footer{color:var(--muted);font-size:14px;text-align:center}
+@media (max-width:420px){.cells{grid-template-columns:repeat(5,40px)}.cell{width:40px;height:40px}main{padding:20px 12px 48px}section{padding:18px 14px 20px}}
+@media (prefers-reduced-motion: reduce){.led{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Oefenen met MakeCode</h1>
+  <p class="intro">Probeer het hier eerst uit. Je hebt geen micro:bit nodig. Daarna doe je het echt in MakeCode, met de handleiding erbij.</p>
+
+  <section aria-labelledby="t1">
+    <h2 id="t1">Wanneer gebeurt het?</h2>
+    <p class="lead">Je programma staat altijd in een blok dat zegt <strong>wanneer</strong> het werkt. Kies een blok en kijk wat de micro:bit doet.</p>
+    <div class="grid2">
+      <div>
+        <div class="mb" aria-label="micro:bit">
+          <div class="mb-logo" aria-hidden="true"></div>
+          <div class="mb-row">
+            <div class="btn-ab"><button id="btnA" aria-label="Knop A"></button>A</div>
+            <div class="leds" id="leds1" aria-hidden="true"></div>
+            <div class="btn-ab"><button id="btnB" aria-label="Knop B"></button>B</div>
+          </div>
+          <div class="edge" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3V</span><span>GND</span></div>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+      </div>
+      <div>
+        <div class="choices" role="radiogroup" aria-label="Kies een blok">
+          <button class="choice" role="radio" aria-checked="false" data-ev="start">bij opstarten</button>
+          <button class="choice" role="radio" aria-checked="true" data-ev="forever">de hele tijd</button>
+          <button class="choice" role="radio" aria-checked="false" data-ev="buttonA">wanneer knop A wordt ingedrukt</button>
+        </div>
+        <div class="event basis" id="evBlock">
+          <div class="hd" id="evTitle">de hele tijd</div>
+          <div class="body">
+            <div class="blk">toon pictogram <span class="icon" data-icon="heart"></span></div>
+            <div class="blk">pauzeer (ms) <span class="pill ms">75</span></div>
+            <div class="blk">toon pictogram <span class="icon" data-icon="small"></span></div>
+            <div class="blk">pauzeer (ms) <span class="pill ms">75</span></div>
+          </div>
+        </div>
+        <div class="slider">
+          <label for="ms"><span>pauzeer (ms)</span><span id="msOut">75 ms</span></label>
+          <input id="ms" type="range" min="50" max="1500" step="25" value="75">
+          <p class="hint" id="msHint">1000 ms is 1 seconde. Een groter getal laat het hart langzamer kloppen.</p>
+        </div>
+        <div class="actions">
+          <button class="act" id="restart">Opnieuw starten</button>
+          <button class="act ghost" id="stop">Stop</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t2" class="draw">
+    <h2 id="t2">Teken je plaatje en zet het in MakeCode</h2>
+    <p class="lead">Klik op de vakjes. Een wit vakje is een lampje dat aan gaat. Je ziet meteen de code die MakeCode ervan maakt.</p>
+    <div class="grid2">
+      <div>
+        <div class="choices" role="radiogroup" aria-label="Wanneer laat je het zien?">
+          <button class="choice" role="radio" aria-checked="true" data-dev="start">bij opstarten</button>
+          <button class="choice" role="radio" aria-checked="false" data-dev="A">knop A</button>
+          <button class="choice" role="radio" aria-checked="false" data-dev="B">knop B</button>
+        </div>
+        <div class="event basis" id="drawEv">
+          <div class="hd" id="drawTitle">bij opstarten</div>
+          <div class="body">
+            <div class="blk" style="display:block">toon lichtjes
+              <div class="cells" id="cells" role="group" aria-label="Vakjes van toon lichtjes"></div>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="act ghost" id="clear">Wis alles</button>
+          <button class="act ghost" id="heart">Maak een hart</button>
+        </div>
+      </div>
+      <div>
+        <div class="tabs" role="tablist" aria-label="Taal van de code">
+          <button class="tab" role="tab" aria-selected="true" data-lang="js" id="tabJs">JavaScript</button>
+          <button class="tab" role="tab" aria-selected="false" data-lang="py" id="tabPy">Python</button>
+        </div>
+        <pre id="code" role="tabpanel" aria-labelledby="tabJs" tabindex="0"></pre>
+        <div class="actions"><button class="act" id="copy">Kopieer de code</button></div>
+        <p class="toast" id="toast" aria-live="polite"></p>
+        <ol class="how">
+          <li>Teken je plaatje en klik op <strong>Kopieer de code</strong> (JavaScript).</li>
+          <li>Open je project in MakeCode. Klik bovenaan op <strong>JavaScript</strong> <span class="nr">8</span>.</li>
+          <li>Klik in de code. Druk op <kbd>Ctrl</kbd> + <kbd>A</kbd> en daarna op <kbd>Ctrl</kbd> + <kbd>V</kbd>.</li>
+          <li>Klik op <strong>Blokken</strong> <span class="nr">8</span>. Je plaatje staat er nu als blokje.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <footer>Hoort bij de handleiding <em>Programmeren met MakeCode</em>. PORT</footer>
+</main>
+
+<script>
+(function(){
+  const HEART=["01010","11111","11111","01110","00100"];
+  const SMALL=["00000","01010","01110","00100","00000"];
+  const OFF=["00000","00000","00000","00000","00000"];
+
+  // ---------- deel 1 ----------
+  const leds=document.getElementById("leds1");
+  const L=[]; for(let i=0;i<25;i++){const d=document.createElement("div");d.className="led";leds.appendChild(d);L.push(d);}
+  function show(p){p.join("").split("").forEach((c,i)=>L[i].classList.toggle("on",c==="1"));}
+  document.querySelectorAll(".icon").forEach(el=>{const p=el.dataset.icon==="heart"?HEART:SMALL;p.join("").split("").forEach(c=>{const i=document.createElement("i");if(c==="1")i.className="on";el.appendChild(i);});});
+
+  let ev="forever", ms=75, run=0, busy=false;
+  const status=document.getElementById("status");
+  const TEXT={
+    start:"bij opstarten: het hart klopt één keer. Daarna blijft het kleine hart staan. Dit blok werkt maar één keer, als de micro:bit start.",
+    forever:"de hele tijd: het hart klopt steeds opnieuw. Dit blok herhaalt alles, zonder te stoppen.",
+    buttonA:"wanneer knop A wordt ingedrukt: er gebeurt niets, tot je op knop A drukt. Druk maar op A."
+  };
+  const wait=(t,id)=>new Promise(r=>setTimeout(()=>r(id===run),t));
+  async function beat(id){show(HEART);if(!await wait(ms,id))return false;show(SMALL);if(!await wait(ms,id))return false;return true;}
+  async function start(){
+    const id=++run; busy=false; show(OFF); status.textContent=TEXT[ev];
+    if(ev==="buttonA") return;
+    await wait(300,id);
+    if(ev==="start"){ await beat(id); return; }
+    while(id===run){ if(!await beat(id)) return; }
+  }
+  async function pressA(){
+    const b=document.getElementById("btnA"); b.classList.add("pressed"); setTimeout(()=>b.classList.remove("pressed"),150);
+    if(ev!=="buttonA"){ status.textContent="Je drukte op A. Er gebeurt niets: geen blok zegt wat de micro:bit dan moet doen."; return; }
+    if(busy) return; busy=true; const id=run; await beat(id); if(id===run){busy=false; status.textContent="Het hart klopte één keer, omdat je op A drukte. Druk nog een keer.";}
+  }
+  document.getElementById("btnA").addEventListener("click",pressA);
+  document.getElementById("btnB").addEventListener("click",()=>{const b=document.getElementById("btnB");b.classList.add("pressed");setTimeout(()=>b.classList.remove("pressed"),150);status.textContent="Je drukte op B. Er gebeurt niets: er is geen blok voor knop B.";});
+  document.querySelectorAll("[data-ev]").forEach(btn=>btn.addEventListener("click",()=>{
+    ev=btn.dataset.ev;
+    document.querySelectorAll("[data-ev]").forEach(b=>b.setAttribute("aria-checked",String(b===btn)));
+    const blk=document.getElementById("evBlock"); blk.className="event "+(ev==="buttonA"?"invoer":"basis");
+    document.getElementById("evTitle").textContent=btn.textContent;
+    start();
+  }));
+  const msIn=document.getElementById("ms");
+  msIn.addEventListener("input",()=>{ms=+msIn.value;document.getElementById("msOut").textContent=ms+" ms";document.querySelectorAll(".ms").forEach(e=>e.textContent=ms);
+    document.getElementById("msHint").textContent= ms>=1000 ? (ms/1000).toString().replace(".",",")+" seconde wachten. Het hart klopt nu langzaam." : "1000 ms is 1 seconde. Een groter getal laat het hart langzamer kloppen.";});
+  msIn.addEventListener("change",start);
+  document.getElementById("restart").addEventListener("click",start);
+  document.getElementById("stop").addEventListener("click",()=>{run++;busy=false;show(OFF);status.textContent="Gestopt. Klik op Opnieuw starten.";});
+  start();
+
+  // ---------- deel 2 ----------
+  const cells=document.getElementById("cells"); const C=[];
+  let on=HEART.join("").split("").map(c=>c==="1");
+  for(let i=0;i<25;i++){const b=document.createElement("button");b.className="cell";b.setAttribute("aria-label","Rij "+(Math.floor(i/5)+1)+", kolom "+(i%5+1));
+    b.addEventListener("click",()=>{on[i]=!on[i];paint();});cells.appendChild(b);C.push(b);}
+  let dev="start", lang="js";
+  function rows(ind){let s="";for(let r=0;r<5;r++){s+=ind;for(let c=0;c<5;c++){s+=(on[r*5+c]?"#":".")+(c<4?" ":"");}s+="\n";}return s;}
+  function code(){
+    if(lang==="js"){
+      if(dev==="start") return "basic.showLeds(`\n"+rows("    ")+"    `)\n";
+      return "input.onButtonPressed(Button."+dev+", function () {\n    basic.showLeds(`\n"+rows("        ")+"        `)\n})\n";
+    }
+    if(dev==="start") return 'basic.show_leds("""\n'+rows("    ")+'    """)\n';
+    const f="on_button_pressed_"+dev.toLowerCase();
+    return "def "+f+"():\n    basic.show_leds(\"\"\"\n"+rows("        ")+"        \"\"\")\ninput.on_button_pressed(Button."+dev+", "+f+")\n";
+  }
+  function paint(){C.forEach((b,i)=>b.setAttribute("aria-pressed",String(on[i])));document.getElementById("code").textContent=code();}
+  document.querySelectorAll("[data-dev]").forEach(btn=>btn.addEventListener("click",()=>{
+    dev=btn.dataset.dev; document.querySelectorAll("[data-dev]").forEach(b=>b.setAttribute("aria-checked",String(b===btn)));
+    document.getElementById("drawEv").className="event "+(dev==="start"?"basis":"invoer");
+    document.getElementById("drawTitle").textContent= dev==="start" ? "bij opstarten" : "wanneer knop "+dev+" wordt ingedrukt";
+    paint();
+  }));
+  document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{lang=t.dataset.lang;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",String(x===t)));document.getElementById("code").setAttribute("aria-labelledby",t.id);paint();}));
+  document.getElementById("clear").addEventListener("click",()=>{on=on.map(()=>false);paint();});
+  document.getElementById("heart").addEventListener("click",()=>{on=HEART.join("").split("").map(c=>c==="1");paint();});
+  const toast=document.getElementById("toast");
+  document.getElementById("copy").addEventListener("click",async()=>{
+    const txt=code();
+    try{ await navigator.clipboard.writeText(txt); toast.textContent="Gekopieerd. Plak de code in MakeCode."; }
+    catch(e){ const r=document.createRange(); r.selectNodeContents(document.getElementById("code")); const s=getSelection(); s.removeAllRanges(); s.addRange(r);
+      toast.textContent="De code is geselecteerd. Druk op Ctrl + C om te kopiëren."; }
+    setTimeout(()=>{toast.textContent="";},4000);
+  });
+  paint();
+})();
+</script>
+</body>
+</html>
