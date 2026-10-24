@@ -40,8 +40,9 @@
         { "slug": "lego-spike-prime", "bron": "Handleiding_LEGO-SPIKE-Prime", "titel": "LEGO SPIKE Prime", "tekst": "Een robot bouwen en programmeren", "icoon": "lego", "beta": true },
         { "slug": "arduino", "bron": "Handleiding_Arduino-1-Start", "titel": "Arduino", "tekst": "Starten met Arduino", "icoon": "arduino", "beta": true },
         { "slug": "lovable", "bron": "Handleiding_Lovable", "titel": "Lovable", "tekst": "Apps en websites bouwen met AI", "icoon": "code", "beta": true,
-          "extras": [{ "titel": "Welke stand kies je?", "src": "extra/lovable-modus-kiezer.html" },
-                     { "titel": "Prompt-bouwer", "src": "extra/lovable-prompt-bouwer.html" }] }
+          "slot": "75f828791805ab68ac5579812fadd94207b0c51a68989ab121810e2625d0cb3d",
+          "extras": [{ "titel": "Welke stand kies je?", "src": "extra/lovable-modus-kiezer.html", "na": "chat-plan-en-build" },
+                     { "titel": "Prompt-bouwer", "src": "extra/lovable-prompt-bouwer.html", "na": "goede-prompts" }] }
       ]
     },
     {
