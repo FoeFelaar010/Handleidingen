@@ -3,6 +3,7 @@ import { vindItem } from './catalogus.js'
 import Top from './components/Top.jsx'
 import Home from './pages/Home.jsx'
 import Handleiding from './pages/Handleiding.jsx'
+import Codeslot, { isOntgrendeld } from './components/Codeslot.jsx'
 
 // Adressen zoals op de oude site: #/teams of #/teams/3-je-klas-openen
 function leesHash() {
@@ -15,6 +16,7 @@ export default function App() {
   const [navOpen, setNavOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [groot, setGroot] = useState(null) // afbeelding in de lightbox
+  const [, setOpen] = useState(0) // na het invullen van een code opnieuw tekenen
 
   useEffect(() => {
     const f = () => { setRoute(leesHash()); setMenuOpen(false); setNavOpen(false) }
@@ -43,10 +45,10 @@ export default function App() {
 
   return (
     <>
-      <Top metHoofdstukken={!!item} navOpen={navOpen} setNavOpen={setNavOpen} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      {item
-        ? <Handleiding key={item.slug} item={item} anker={route.anker} navOpen={navOpen} setNavOpen={setNavOpen} />
-        : <Home />}
+      <Top metHoofdstukken={!!item && isOntgrendeld(item)} navOpen={navOpen} setNavOpen={setNavOpen} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      {!item ? <Home />
+        : !isOntgrendeld(item) ? <Codeslot key={item.slug} item={item} onOpen={() => setOpen((n) => n + 1)} />
+        : <Handleiding key={item.slug} item={item} anker={route.anker} navOpen={navOpen} setNavOpen={setNavOpen} />}
       <div className="lb" hidden={!groot} onClick={(e) => { if (e.target.tagName !== 'IMG') sluitGroot() }}>
         <button className="lb-x" type="button">Sluiten</button>
         {groot && <img src={groot.src} alt="" />}
