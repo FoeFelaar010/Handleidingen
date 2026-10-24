@@ -410,3 +410,28 @@ img.ti{display:block;max-width:140px;height:auto;margin:0 auto .4rem}
 /* ---- nieuw ---- */
 .laden{padding:3rem 0;color:var(--muted)}
 .anim-open{white-space:nowrap}
+
+/* v27-sjabloon: maat van een afbeelding volgt de maat in Word */
+:root{--danger-bg:#FBE9E9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--danger-bg:#2E1616}}
+:root[data-theme="dark"]{--danger-bg:#2E1616}
+.blk.danger{border-color:var(--danger);background:var(--danger-bg)} .blk.danger .blk-t{color:var(--danger)}
+.shot.small{max-width:320px;margin-inline:auto}
+.shot.tel{max-width:260px;margin-inline:auto}
+.shot.small .zoom,.shot.tel .zoom{width:100%}
+.shot.small figcaption,.shot.tel figcaption{text-align:center}
+.mt{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}
+.mt-m .shot,.mt-m .shot.small{max-width:100%;margin-inline:0}.mt-m .shot.tel{max-width:240px;margin-inline:0}
+.mt-row{justify-content:center}.mt-row .shot{flex:0 1 240px;margin:0}
+@media (max-width:700px){.mt{grid-template-columns:1fr}.shot.small{max-width:100%}.mt-row .shot{flex:1 1 140px}}
+@media (max-width:700px){.mt-m .shot{max-width:320px;margin-inline:auto}}
+
+/* ---- 24 okt (avond): sitefouten ---- */
+/* deep links: kop niet onder de paarse balk (balk + 4px oranje rand) */
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--toph) + 20px)}
+/* brede schermen: menu + tekst samen in het midden */
+@media (min-width:1000px){.layout{max-width:calc(var(--navw) + 900px);margin-inline:auto}}
+/* codeblok uit Word-stijl Code: balk met kopieerknop boven de code */
+.code>pre{grid-row:2;margin:0;border-radius:0}
+.code:has(>pre){border:0;background:#1D1F23}
+.code:has(>pre) .code-bar{background:#2B2E34}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompt-bouwer</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--sub:#5b6478;--acc:#9b51e0;--line:#e3e6ee}
+@media (prefers-color-scheme:dark){:root{--bg:#141821;--card:#1e2430;--ink:#eef1f7;--sub:#a9b1c3;--line:#2e3646}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px}
+.w{max-width:640px;margin:0 auto}h1{font-size:1.4rem;margin:.2em 0}p.s{color:var(--sub);margin-top:0}
+label{display:block;font-weight:600;margin:14px 0 6px}small{color:var(--sub);font-weight:400}
+input,select,textarea{width:100%;font:inherit;padding:11px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips label{font-weight:400;margin:0;display:flex;gap:6px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:99px;padding:6px 12px}
+.out{background:var(--card);border:2px dashed var(--acc);border-radius:12px;padding:14px;white-space:pre-wrap;margin-top:16px;min-height:5em}
+button{font:inherit;font-weight:600;padding:12px 18px;border:0;border-radius:10px;background:var(--acc);color:#fff;cursor:pointer;margin-top:12px}
+.warn{color:#c0392b;margin-top:8px;min-height:1.2em}
+</style></head><body><div class="w">
+<h1>Prompt-bouwer</h1>
+<p class="s">Vul in en kopieer je prompt naar Lovable (stand <b>Build</b>).</p>
+<label>1. Wat wil je maken?</label>
+<select id="soort"><option>een website over mijn hobby</option><option>een quiz</option><option>een huiswerkplanner</option><option>een spelletje</option><option>een website voor een (nep)bedrijfje</option></select>
+<label>2. Onderwerp <small>(bijv. voetbal, katten, gamen)</small></label><input id="onderwerp" placeholder="voetbal">
+<label>3. Titel bovenaan</label><input id="titel" placeholder="Mijn voetbalwereld">
+<label>4. Welke onderdelen? <small>(kies er een paar)</small></label>
+<div class="chips" id="delen"></div>
+<label>5. Kleuren</label><input id="kleur" placeholder="groen en wit">
+<label>6. Sfeer</label><select id="sfeer"><option>vrolijk en kleurrijk</option><option>rustig en strak</option><option>stoer en donker</option><option>speels, met grote knoppen</option></select>
+<div class="warn" id="warn"></div>
+<div class="out" id="out"></div>
+<button id="kopie">Kopieer prompt</button>
+</div>
+<script>
+const D=['drie blokken met informatie','een foto bovenaan','een menu','een knop "Meer lezen"','een quiz met 5 vragen','een contactformulier (zonder echte gegevens)','een footer'];
+const dc=document.getElementById('delen');D.forEach((d,n)=>dc.insertAdjacentHTML('beforeend',`<label><input type="checkbox" value="${d}" ${n<1?'checked':''}> ${d}</label>`));
+const $=id=>document.getElementById(id);
+const verboden=/\b(\d{6,}|\d{4}\s?[a-z]{2}|@|straat|laan|weg\s\d|06[\s-]?\d)/i;
+function make(){const delen=[...dc.querySelectorAll('input:checked')].map(x=>x.value);
+ const o=$('onderwerp').value.trim()||'[onderwerp]',t=$('titel').value.trim()||'[titel]',k=$('kleur').value.trim()||'[kleuren]';
+ const all=[o,t,k].join(' ');$('warn').textContent=verboden.test(all)?'Let op: zet geen adres, telefoonnummer of e-mail in je prompt!':'';
+ $('out').textContent=`Maak ${$('soort').value} over ${o}.\nBovenaan een grote titel "${t}".\n${delen.length?'Daaronder: '+delen.join(', ')+'.\n':''}Gebruik de kleuren ${k}. De sfeer is ${$('sfeer').value}.\nMaak het geschikt voor telefoon, tablet en laptop.\nGebruik nog geen inloggen of database.`}
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',make));
+$('kopie').onclick=async()=>{try{await navigator.clipboard.writeText($('out').textContent);$('kopie').textContent='Gekopieerd!'}catch(e){$('kopie').textContent='Selecteer en kopieer zelf'}setTimeout(()=>$('kopie').textContent='Kopieer prompt',1500)};
+make();
+</script></body></html>

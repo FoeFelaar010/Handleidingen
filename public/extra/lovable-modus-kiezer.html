@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Welke stand kies je?</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--sub:#5b6478;--chat:#2f80ed;--plan:#9b51e0;--build:#27ae60;--line:#e3e6ee}
+@media (prefers-color-scheme:dark){:root{--bg:#141821;--card:#1e2430;--ink:#eef1f7;--sub:#a9b1c3;--line:#2e3646}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px}
+.w{max-width:640px;margin:0 auto}h1{font-size:1.4rem;margin:.2em 0}p.s{color:var(--sub);margin-top:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.q{font-weight:600;font-size:1.1rem;margin-bottom:12px}
+.opts{display:grid;gap:10px}button{font:inherit;text-align:left;padding:14px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--sub)}button.ok{border-color:var(--build);background:#27ae6018}button.no{border-color:#eb5757;background:#eb575718}
+.fb{margin-top:10px;min-height:1.5em;color:var(--sub)}.tag{display:inline-block;padding:2px 10px;border-radius:99px;color:#fff;font-weight:600;font-size:.85rem}
+.chat{background:var(--chat)}.plan{background:var(--plan)}.build{background:var(--build)}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--build);width:0;transition:width .3s}
+.end{text-align:center}.big{font-size:2rem;font-weight:700}
+</style></head><body><div class="w">
+<h1>Welke stand kies je?</h1>
+<p class="s"><span class="tag chat">Chat</span> praten &nbsp; <span class="tag plan">Plan</span> eerst een plan &nbsp; <span class="tag build">Build</span> echt bouwen</p>
+<div class="bar"><i id="bar"></i></div>
+<div class="card" id="box"></div>
+</div>
+<script>
+const Q=[
+["Je wilt weten hoe je een menu maakt, maar je wilt nog niets veranderen.","Chat","In Chat verandert Lovable niets. Vragen stellen kost bijna geen credits."],
+["Je wilt een hele quiz met 10 vragen, scores en een eindscherm.","Plan","Een grote opdracht? Laat eerst een plan maken. Dan klik je op Approve."],
+["De titel moet groter. Dat is alles.","Build","Een kleine, duidelijke opdracht kan meteen in Build."],
+["Je knop werkt al drie keer niet, ook niet na 'fix it'.","Plan","Na 2-3 mislukte pogingen: ga naar Plan en vraag naar de oorzaak."],
+["Je twijfelt of je site beter blauw of groen kan zijn.","Chat","Ideeën bespreken doe je in Chat."],
+["Je hebt een plan gelezen en het klopt. Wat doe je?","Build","Na Approve schakelt Lovable vanzelf naar Build en gaat bouwen."],
+["Je wilt een extra pagina 'Contact' en een menu om ertussen te wisselen.","Plan","Meerdere dingen tegelijk? Eerst een plan, dan weet je wat er gebeurt."],
+["Je wilt de footer weghalen.","Build","Duidelijk en klein: meteen bouwen."]];
+let i=0,score=0;const box=document.getElementById('box'),bar=document.getElementById('bar');
+function show(){bar.style.width=(i/Q.length*100)+'%';
+ if(i>=Q.length){box.innerHTML=`<div class="end"><div class="big">${score} / ${Q.length}</div><p>${score>=6?'Top! Jij kiest slim en bespaart credits.':'Lees hoofdstuk 4 nog eens en probeer opnieuw.'}</p><button onclick="i=0;score=0;show()">Opnieuw</button></div>`;return}
+ const [q,a,uitleg]=Q[i];box.innerHTML=`<div class="q">${i+1}. ${q}</div><div class="opts">${['Chat','Plan','Build'].map(o=>`<button data-o="${o}"><span class="tag ${o.toLowerCase()}">${o}</span></button>`).join('')}</div><div class="fb" id="fb"></div>`;
+ box.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(box.dataset.done)return;box.dataset.done=1;const ok=b.dataset.o===a;if(ok)score++;
+  b.classList.add(ok?'ok':'no');if(!ok)box.querySelector(`[data-o="${a}"]`).classList.add('ok');
+  document.getElementById('fb').innerHTML=(ok?'Goed! ':'Bijna. Het is <b>'+a+'</b>. ')+uitleg+'<br><br><button id="nx">Volgende</button>';
+  document.getElementById('nx').onclick=()=>{delete box.dataset.done;i++;show()}})}
+show();
+</script></body></html>

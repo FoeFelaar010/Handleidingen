@@ -35,10 +35,13 @@
       "titel": "Programmeren",
       "tekst": "Een micro:bit of een LEGO-robot laten doen wat jij wilt.",
       "items": [
-        { "slug": "microbit", "bron": "Handleiding_MakeCode", "titel": "micro:bit", "tekst": "Programmeren met blokken in MakeCode", "icoon": "microbit", "beta": true,
+        { "slug": "microbit", "bron": "Handleiding_MakeCode", "titel": "MakeCode", "tekst": "De micro:bit programmeren met blokken", "icoon": "microbit", "beta": true,
           "extras": [{ "titel": "Oefenen met MakeCode", "src": "extra/oefenen-met-makecode.html" }] },
         { "slug": "lego-spike-prime", "bron": "Handleiding_LEGO-SPIKE-Prime", "titel": "LEGO SPIKE Prime", "tekst": "Een robot bouwen en programmeren", "icoon": "lego", "beta": true },
-        { "slug": "arduino", "bron": "Handleiding_Arduino-1-Start", "titel": "Arduino", "tekst": "Starten met Arduino", "icoon": "arduino", "beta": true }
+        { "slug": "arduino", "bron": "Handleiding_Arduino-1-Start", "titel": "Arduino", "tekst": "Starten met Arduino", "icoon": "arduino", "beta": true },
+        { "slug": "lovable", "bron": "Handleiding_Lovable", "titel": "Lovable", "tekst": "Apps en websites bouwen met AI", "icoon": "code", "beta": true,
+          "extras": [{ "titel": "Welke stand kies je?", "src": "extra/lovable-modus-kiezer.html" },
+                     { "titel": "Prompt-bouwer", "src": "extra/lovable-prompt-bouwer.html" }] }
       ]
     },
     {

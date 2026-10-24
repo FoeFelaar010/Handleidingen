@@ -7,7 +7,7 @@ export default function Top({ metHoofdstukken, navOpen, setNavOpen, menuOpen, se
     <>
       <header className="top">
         <a className="top-school" href="#/">
-          <img src="img/logo-school.png" alt="Melanchthon Mavo Schiebroek, naar alle handleidingen" width="1345" height="275" />
+          <img src="img/logo-school.png" alt="Melanchthon Mavo Schiebroek, naar alle handleidingen" width="1163" height="275" />
         </a>
         {metHoofdstukken && (
           <button className="menu" type="button" aria-controls="nav" aria-expanded={navOpen}

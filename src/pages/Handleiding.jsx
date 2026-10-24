@@ -2,10 +2,28 @@ import { useEffect, useRef, useState } from 'react'
 import Icoon from '../components/Icoon.jsx'
 import { maakCodeblokken } from '../arduino.js'
 
+function voegKopieerknopToe(pre) {
+  const box = pre.parentElement
+  if (box.querySelector('.code-bar')) return
+  const bar = document.createElement('div')
+  bar.className = 'code-bar'
+  bar.innerHTML = '<span>Code</span><button type="button" class="code-copy">📋 Kopieer code</button>'
+  bar.querySelector('button').addEventListener('click', async (e) => {
+    const b = e.currentTarget
+    try { await navigator.clipboard.writeText(pre.textContent) } catch {
+      const r = document.createRange(); r.selectNodeContents(pre)
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy')
+    }
+    b.textContent = '✓ Gekopieerd!'
+    setTimeout(() => { b.textContent = '📋 Kopieer code' }, 1800)
+  })
+  box.prepend(bar)
+}
+
 function Extra({ x }) {
   return (
     <figure className="anim">
-      <iframe src={x.src} title={x.titel} loading="lazy" />
+      <iframe src={x.src} title={x.titel} loading="lazy" allow="clipboard-write" />
       <figcaption>
         Op de website kun je dit uitproberen: {x.titel} · <a className="anim-open" href={x.src} target="_blank" rel="noopener">Open in een groot venster</a>
       </figcaption>
@@ -52,9 +70,11 @@ export default function Handleiding({ item, anker, navOpen, setNavOpen }) {
     else if (!anker) window.scrollTo(0, 0)
   }, [data, anker])
 
-  // Arduino-code als codeblok (eenmalig na laden)
+  // Arduino-code als codeblok (oude Word-bestanden), en een kopieerknop bij elk codeblok uit stijl Code (v27)
   useEffect(() => {
-    if (data && item.slug === 'arduino' && mainRef.current) maakCodeblokken(mainRef.current)
+    if (!data || !mainRef.current) return
+    if (item.slug === 'arduino') maakCodeblokken(mainRef.current)
+    mainRef.current.querySelectorAll('.code > pre').forEach(voegKopieerknopToe)
   }, [data, item.slug])
 
   // huidig hoofdstuk oplichten in het menu
