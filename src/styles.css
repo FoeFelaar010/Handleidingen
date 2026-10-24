@@ -435,3 +435,13 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--toph) + 20px)}
 .code>pre{grid-row:2;margin:0;border-radius:0}
 .code:has(>pre){border:0;background:#1D1F23}
 .code:has(>pre) .code-bar{background:#2B2E34}
+
+/* codeslot (bijv. Lovable): drempel met code van de docent */
+.slot{max-width:30rem;margin-top:1rem;padding:1.2rem 1.3rem;border-radius:12px;background:var(--panel)}
+.slot label{display:block;font-weight:700;margin:.6rem 0 .3rem}
+.slot-rij{display:flex;gap:.5rem}
+.slot input{flex:1;min-width:0;font:inherit;padding:.6rem .8rem;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)}
+.slot input:focus{outline:none;border-color:var(--accent)}
+.slot button{font:inherit;font-weight:700;padding:.6rem 1.1rem;border:0;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer}
+.slot-fout{color:var(--danger);font-weight:600;margin:.6rem 0 0}
+.slot-label{background:#EEE6F0;color:var(--accent)}
