@@ -61,7 +61,9 @@
       "tekst": "Wat is het, hoe werkt het en wat kun je ermee?",
       "items": [
         { "slug": "wat-is-3d-printen", "bron": "Informatie_Wat-is-3D-printen", "titel": "Wat is 3D-printen?", "tekst": "Hoe het werkt en wat je ermee kunt", "icoon": "kubus",
-          "extras": [{ "titel": "Zo werkt een 3D-printer", "src": "extra/Zo_werkt_een_3D-printer.html", "na": "wat-is-3d-printen" }] },
+          "extras": [{ "titel": "Zo werkt een 3D-printer", "src": "extra/Zo_werkt_een_3D-printer.html", "na": "wat-is-3d-printen" },
+                     { "titel": "Timelapse: het bootje (3DBenchy) wordt laag voor laag geprint op de Bambu Lab X1C", "video": "extra/Timelapse_bootje_X1C.mp4",
+                       "poster": "extra/Timelapse_bootje_X1C_poster.jpg", "na": "hoe-werkt-een-3d-printer", "bij": "filmpje van deze print" }] },
         { "slug": "wat-is-lasersnijden", "bron": "Informatie_Wat-is-lasersnijden", "titel": "Wat is lasersnijden?", "tekst": "CO2-laser en diodelaser", "icoon": "ico-xtool.webp",
           "extras": [{ "titel": "Zo werkt een lasersnijder", "src": "extra/Zo_werkt_een_lasersnijder.html", "na": "hoe-werkt-een-lasersnijder" }] },
         { "slug": "wat-is-cricut", "bron": "Informatie_Wat-is-Cricut", "titel": "Wat is een Cricut?", "tekst": "Snijplotter en hittepers", "icoon": "cricut", "beta": true },

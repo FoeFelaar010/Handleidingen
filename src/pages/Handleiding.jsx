@@ -21,6 +21,15 @@ function voegKopieerknopToe(pre) {
 }
 
 function Extra({ x }) {
+  if (x.video) {
+    // filmpje zonder geluid (bijv. een timelapse): speelt pas als de leerling op afspelen klikt
+    return (
+      <figure className="anim video">
+        <video src={x.video} poster={x.poster} controls muted loop playsInline preload="none" />
+        <figcaption>{x.titel}</figcaption>
+      </figure>
+    )
+  }
   return (
     <figure className="anim">
       <iframe src={x.src} title={x.titel} loading="lazy" allow="clipboard-write" />
@@ -40,6 +49,25 @@ function verdeelExtras(extras = [], secties) {
     else los.push(x)
   }
   return { perSectie, los }
+}
+
+// Hoofdstuk-HTML in stukken: een extra met "bij" komt direct na de alinea met die tekst
+// (bijv. "Op de website kun je het filmpje … bekijken."), anders aan het eind van het hoofdstuk.
+function Hoofdstuk({ html, extras = [] }) {
+  const plekken = extras.map((x) => {
+    const i = x.bij ? html.indexOf(x.bij) : -1
+    const eind = i >= 0 ? html.indexOf('</p>', i) : -1
+    return { x, pos: eind >= 0 ? eind + 4 : html.length }
+  }).sort((a, b) => a.pos - b.pos)
+  const delen = []
+  let vorige = 0
+  plekken.forEach(({ x, pos }, n) => {
+    if (pos > vorige) delen.push(<div key={`t${n}`} dangerouslySetInnerHTML={{ __html: html.slice(vorige, pos) }} />)
+    delen.push(<Extra key={x.src || x.video} x={x} />)
+    vorige = pos
+  })
+  if (vorige < html.length) delen.push(<div key="rest" dangerouslySetInnerHTML={{ __html: html.slice(vorige) }} />)
+  return delen
 }
 
 export default function Handleiding({ item, anker, navOpen, setNavOpen }) {
@@ -132,14 +160,13 @@ export default function Handleiding({ item, anker, navOpen, setNavOpen }) {
         {data.secties.map((s) => (
           <section id={s.id} className="ch" key={s.id}>
             <h2>{s.titel}</h2>
-            <div dangerouslySetInnerHTML={{ __html: s.html }} />
-            {(perSectie[s.id] || []).map((x) => <Extra key={x.src} x={x} />)}
+            <Hoofdstuk html={s.html} extras={perSectie[s.id]} />
           </section>
         ))}
         {los.length > 0 && (
           <section id="uitproberen" className="ch">
             <h2>Uitproberen</h2>
-            {los.map((x) => <Extra key={x.src} x={x} />)}
+            {los.map((x) => <Extra key={x.src || x.video} x={x} />)}
           </section>
         )}
         <footer className="foot">Handleidingen · Melanchthon Mavo Schiebroek · versie {data.versie}</footer>

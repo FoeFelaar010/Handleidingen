@@ -445,3 +445,7 @@ html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--toph) + 20px)}
 .slot button{font:inherit;font-weight:700;padding:.6rem 1.1rem;border:0;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer}
 .slot-fout{color:var(--danger);font-weight:600;margin:.6rem 0 0}
 .slot-label{background:#EEE6F0;color:var(--accent)}
+
+/* video-extra (bijv. timelapse) */
+.anim.video video{display:block;width:100%;max-width:720px;margin-inline:auto;border-radius:14px;background:#000}
+.anim.video figcaption{text-align:center}
