@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { vindItem } from './catalogus.js'
 import Top from './components/Top.jsx'
 import Home from './pages/Home.jsx'
 import Handleiding from './pages/Handleiding.jsx'
 import Codeslot, { isOntgrendeld } from './components/Codeslot.jsx'
+// Beheer (met Supabase) apart laden, zodat leerlingen die code niet hoeven te downloaden
+const Beheer = lazy(() => import('./pages/Beheer.jsx'))
 
 // Adressen zoals op de oude site: #/teams of #/teams/3-je-klas-openen
 function leesHash() {
@@ -41,12 +43,14 @@ export default function App() {
   const sluitGroot = () => { groot?.knop?.focus(); setGroot(null) }
 
   const item = vindItem(route.slug)
-  useEffect(() => { if (!item) { document.title = 'Handleidingen · Melanchthon Mavo Schiebroek'; window.scrollTo(0, 0) } }, [item])
+  const isBeheer = route.slug === 'beheer'
+  useEffect(() => { if (!item && !isBeheer) { document.title = 'Handleidingen · Melanchthon Mavo Schiebroek'; window.scrollTo(0, 0) } }, [item])
 
   return (
     <>
       <Top metHoofdstukken={!!item && isOntgrendeld(item)} navOpen={navOpen} setNavOpen={setNavOpen} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      {!item ? <Home />
+      {isBeheer ? <Suspense fallback={<main className="home"><p>Laden…</p></main>}><Beheer /></Suspense>
+        : !item ? <Home />
         : !isOntgrendeld(item) ? <Codeslot key={item.slug} item={item} onOpen={() => setOpen((n) => n + 1)} />
         : <Handleiding key={item.slug} item={item} anker={route.anker} navOpen={navOpen} setNavOpen={setNavOpen} />}
       <div className="lb" hidden={!groot} onClick={(e) => { if (e.target.tagName !== 'IMG') sluitGroot() }}>
