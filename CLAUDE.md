@@ -44,6 +44,14 @@ Controle na een wijziging aan de omzetter: draai hem op alle `word/*.docx` en ve
 - Webupload: maximaal ± 15 MB per keer slepen. Bestanden met een punt (.github, .gitignore) slaat slepen over: Add file → Create new file.
 - Codeblokken (stijl Code) krijgen op de site een kopieerknop (src/pages/Handleiding.jsx); oude Arduino-code via src/arduino.js.
 
+## Beheer (#/beheer)
+- src/pages/Beheer.jsx (apart geladen) + src/supabase.js. Supabase-project = dat van het MOL-portaal (icwpaomwjwlcxzuircgh),
+  zelfde wachtwoordaccounts, eigen opslagsleutel. Rechten: tabel `hl_beheerders` (e-mail), logboek `hl_logboek`.
+- Edge Function `handleidingen-beheer` (bron in supabase/functions/) zet Word-bestanden en catalogus.json via de GitHub-API
+  in de repo (secret `HL_GITHUB_TOKEN`: fine-grained token, alleen repo Handleidingen, Contents read/write + Actions read).
+  Upload = hoogste versie + 1 in dezelfde map, oudere versies van die bron worden in dezelfde commit verwijderd.
+- Beheerder toevoegen: `insert into hl_beheerders (email) values ('…');` (account met wachtwoord moet bestaan, zie MOL).
+
 ## Later
 - Domein melanchthon.xyz overzetten van Lovable naar GitHub Pages (CNAME in public/, DNS, Pages → Custom domain).
 - Portaal voor projecten/lessen met Supabase op dezelfde site; handleidingen blijven openbaar.
