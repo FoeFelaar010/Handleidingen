@@ -176,7 +176,6 @@ table.knop td:first-child,table.knop th:first-child{width:3.2rem}
 .bar-home{display:flex;gap:.5rem;align-items:center;margin-left:auto;font-weight:700;font-size:.9rem;text-decoration:none;color:var(--link)}
 .sub{font-size:1.1rem;color:var(--muted);margin:-.3rem 0 1rem}
 .hero p{max-width:66ch}
-.hero .blk{max-width:66ch}
 .phases li{display:flex;gap:.6rem;align-items:center;padding:.7rem .8rem;border:1px solid var(--line);border-radius:8px;background:var(--info-bg)}
 .cap{font-size:.88rem;font-style:italic;color:var(--muted)}
 .shot .zoom{width:auto;max-width:100%}
